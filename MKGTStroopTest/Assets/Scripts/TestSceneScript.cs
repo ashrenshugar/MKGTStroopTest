@@ -21,25 +21,32 @@ public class TestSceneScript : MonoBehaviour
 
 
     //timer variables
-    public float timeRemaining = 30;
-    public bool timerIsRunning = false;
+    public float currentTime = 0;
+    
     
     //global variables
     public string colourColour;
     public string wordColour;
     public int correct = 0;
     public int incorrect = 0;
-    public int totalQuestions = 0;
-    
-   
+    public int questionsLeft = 30;
+    public bool gamestarted = false;
+
+
     public void StartGame()
     {
-        //closes instructions panel and starts game
+        //set all variables to default
+        correct = 0;
+        incorrect = 0;
+        questionsLeft = 30;
+
+        //closes instructions panel and result panel and opens game panel
         instructions.SetActive(false);
+        Results.SetActive(false);
         GamePanel.SetActive(true);
 
-        //start timer
-        timerIsRunning = true;
+        //start game
+        gamestarted = true;
 
         //changes main word to random colour and word
         RandomColour();
@@ -48,27 +55,27 @@ public class TestSceneScript : MonoBehaviour
 
     void Update()
     {
-        //checks if timer is running
-        if (timerIsRunning)
+        //checks if the game has started
+        if (gamestarted)
         {
-            //checks if time is remaining
-            if (timeRemaining > 0)
-            {
-                //adjusts time
-                timeRemaining -= Time.deltaTime;
-                DisplayTime(timeRemaining);
-            }
-            else
+            //checks if questions are remaining
+            if (questionsLeft == 0)
             {
                 //game ended
                 //sets game panel to false and result panel to true
                 GamePanel.SetActive(false);
                 Results.SetActive(true);
 
-                // set remainin time to exactly 0 and stops timer
-                timeRemaining = 0;
-                timerIsRunning = false;
+                // ends the game
+
+                gamestarted = false;
                 EndGame();
+            }
+            else
+            {
+                //adjusts time
+                currentTime += Time.deltaTime;
+                DisplayTime(currentTime);
             }
         }
     }
@@ -77,11 +84,14 @@ public class TestSceneScript : MonoBehaviour
     {
         timeToDisplay += 1;
 
-        
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
 
-        //displays seconds in 2 number format
-        timerText.text = string.Format("{0:00}", seconds);
+        //displays time to timer
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        //displays time to result time
+        totalResult.text = string.Format("{0:00}:{1:00}", minutes, seconds);
 
     }
 
@@ -158,75 +168,121 @@ public class TestSceneScript : MonoBehaviour
         }
     }
 
+    //"red" button pushed
     public void CheckRed()
     {
+        //checks is colour is red
         if(colourColour == "Red")
         {
+            //correct
+            //adds to correct amount
             correct = correct + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         } else
         {
+            //incorrect
+            //add to incorrect amount
             incorrect = incorrect + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
     }
+
+    //"blue" button pushed
     public void CheckBlue()
     {
+        //checks is colour is blue
         if (colourColour == "Blue")
         {
+            //correct
+            //adds to correct amount
             correct = correct + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
         else
         {
+            //incorrect
+            //add to incorrect amount
             incorrect = incorrect + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
     }
+
+    //"green" button pushed
     public void CheckGreen()
     {
+        //checks is colour is green
         if (colourColour == "Green")
         {
+            //correct
+            //adds to correct amount
             correct = correct + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
         else
         {
+            //incorrect
+            //add to incorrect amount
             incorrect = incorrect + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
     }
+
+    //"yellow" button pushed
     public void CheckYellow()
     {
+        //checks is colour is yellow
         if (colourColour == "Yellow")
         {
+            //correct
+            //adds to correct amount
             correct = correct + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
         else
         {
+            //incorrect
+            //add to incorrect amount
             incorrect = incorrect + 1;
-            totalQuestions = totalQuestions + 1;
+            //deducts 1 from questions answered
+            questionsLeft = questionsLeft - 1;
+            //randomizes new colour/word combo
             RandomColour();
         }
     }
 
     void EndGame()
     {
-        correctResult.text = correct.ToString();
-        incorrectResult.text = incorrect.ToString();
-        totalResult.text = totalQuestions.ToString();
+        //displays correct amount answered
+        correctResult.text = correct.ToString() + " /30";
+        //displays incrrect amount answered
+        incorrectResult.text = incorrect.ToString() + " /30";
+        
     }
 
     public void ReturnToMenu()
     {
+        //returns to main menu
         SceneManager.LoadScene(0);
     }
 }
