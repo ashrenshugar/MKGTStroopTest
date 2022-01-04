@@ -39,6 +39,7 @@ public class TestSceneScript : MonoBehaviour
         correct = 0;
         incorrect = 0;
         questionsLeft = 30;
+        currentTime = 0;
 
         //closes instructions panel and result panel and opens game panel
         instructions.SetActive(false);
